@@ -2,6 +2,7 @@ package com.jgsudhakar.spring.multitenancy.datasource;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -34,9 +36,9 @@ public class MultitenantConfiguration {
     @ConfigurationProperties(
             prefix = "spring.datasource"
     )
-    public DataSource dataSource() {
-        File[] files = Paths.get("D:\\sudhakar\\softwares\\SpringSTS\\sts-4.1.0.RELEASE\\admingw_D7.1_release\\MultiTenancy\\src\\main\\resources\\tenant\\").toFile().listFiles();
-        Map<Object,Object> resolvedDataSources = new HashMap<>();
+    public DataSource dataSource() throws FileNotFoundException{
+    	 File[] files = Paths.get(ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX+File.separator + "tenant").toString()).toFile().listFiles();
+    	 Map<Object,Object> resolvedDataSources = new HashMap<>();
 
         for(File propertyFile : files) {
             Properties tenantProperties = new Properties();
